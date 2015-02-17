@@ -1,0 +1,11 @@
+{
+    "servers": [{
+        "location": "/nots"
+    }, {
+        "location": "/max"
+    }, {
+        "location": "/cool"
+    }, {
+        "location": "/copol"
+    }]
+}
