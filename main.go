@@ -25,7 +25,7 @@ type Servers struct {
 func main() {
 
 	// Register command-line flags.
-	port := flag.String("port", "800", "port to broadcast server on")
+	port := flag.String("port", "8000", "port to broadcast server on")
 	jsonFile := flag.String("p", "", "file to parse")
 	flag.Parse()
 

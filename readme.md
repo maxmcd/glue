@@ -13,6 +13,17 @@ Let's take the Google geocode API endpoint. We'll create a service that given a 
 https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA
 ```
 From that endpoint we'll get a response like this:
+```nginx
+endpoint {
+
+}
+endpoint {
+
+}
+request {
+    location: "/google.com"
+}
+```
 ```json
 {
    "results" : [
@@ -47,33 +58,44 @@ First let's set up the request endpoint:
 
 ```nginx
 server {
-    location: /lat-lng-img;
-    $latlng = get("https://maps.googleapis.com/maps/api/geocode/json").
-    params({
-        "address": request.address
-    });
-    return_format: 
-    return: "https://maps.googleapis.com/maps/api/staticmap?center=" + 
-    response.results[0].geometry.location.lat + 
-    "," + 
-    response.results[0].geometry.location.lng + 
-    "&zoom=11&size=200x200";
+    location {
+        endpoint /lat-lng-img;
+        method get;
+        request {
+            method get;
+            endpoint "https://maps.googleapis.com/maps/api/geocode/json";
+            params {
+                address params.address;
+            }
+        }
+        return "https://maps.googleapis.com/maps/api/staticmap?center=" + 
+            request.results[0].geometry.location.lat + 
+            "," + 
+            response.results[0].geometry.location.lng + 
+            "&zoom=11&size=200x200";
+    }
 }
 ```
 
 ```json
 "server": {
-    "location": "/lat-lng-img",
-    "$latlng" : {
-        "type" : "request",
-        "method" : "get",
-        "url" : "https://maps.googleapis.com/maps/api/geocode/json",
-        "params" :{
-            "address":"params.address"            
-        }
-    },
-    "response" : {
-
+    "location": {
+        "endpoint":"/lat-lng-img",
+        "method":"get",
+        "request " : [
+            {
+                "method" : "get",
+                "url" : "https://maps.googleapis.com/maps/api/geocode/json",
+                "params" : {
+                    "address":"params.address"            
+                }
+            }
+        ],
+        "return":"'https://maps.googleapis.com/maps/api/staticmap?center=' + 
+            request.results[0].geometry.location.lat + 
+            ',' + 
+            response.results[0].geometry.location.lng + 
+            '&zoom=11&size=200x200'"
     }
 }
 ```
